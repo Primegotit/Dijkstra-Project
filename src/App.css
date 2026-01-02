@@ -7,7 +7,7 @@
   /* background: linear-gradient(130deg , #000000, #000000,#011); */
   background: linear-gradient(130deg ,rgb(2, 12, 31),  #000000, #000000,rgb(15, 2, 29));
 
-  height: 100vh;
+  min-height: 100vh;
   color: #eee;
   padding: 0px 20px;
   display: grid;
