@@ -5,9 +5,9 @@
 
 #page1{
   /* background: linear-gradient(130deg , #000000, #000000,#011); */
-  background: linear-gradient(130deg ,rgb(2, 12, 31),  #000000, #000000,rgb(15, 2, 29));
+  background: linear-gradient(130deg ,rgb(3, 19, 48),  #000000, #000000,rgb(28, 4, 54));
 
-  min-height: 100vh;
+  max-height: 100vh;
   color: #eee;
   padding: 0px 20px;
   display: grid;
