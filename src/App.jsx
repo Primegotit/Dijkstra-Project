@@ -72,6 +72,10 @@ let openSideNavbar = () => {
           <h5>Where <span >algorithms</span> meet the road.</h5>
           <p>Plan, optimize, and track your deliveries in seconds. With real-time maps and intelligent route calculation, TrackWay gets you from point A to point B the fastest way possible.</p>
           <button>Get Started</button>
+
+          <div id='down-arrow'>
+            <img src="/arrow-down2.png" alt="" />
+          </div>
         </section>
       </main>
     </div>

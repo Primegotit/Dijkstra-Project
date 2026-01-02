@@ -258,6 +258,45 @@ main{
 
 }
 
+#down-arrow{
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+#down-arrow img{
+  width: 20px;
+  height: 30px;
+
+  animation-name: arrow;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+
+  
+}
+
+
+@keyframes arrow{
+    0%{
+        transform: translateY(0px);
+    }
+    50%{
+        transform: translateY(20px);
+        
+    }
+
+    100%{
+        transform: translateY(0px);
+
+    }
+    
+}
+
+
+
+
 
 
 @media (max-width: 720px) {
@@ -442,6 +481,77 @@ main{
 
 
 }
+
+
+
+
+
+.side-navbar-container {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    width: 150px;
+
+    background: linear-gradient(
+        rgba(15, 51, 117, 0.75),
+        rgba(81, 11, 155, 0.67)
+    );
+
+    padding: 30px;
+    box-shadow: -2px 0 15px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 20px;
+    color: white;
+}
+
+.side-navbar-container ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+/* li */
+.side-navbar-container ul li {
+    position: relative;
+}
+
+/* link fills li */
+.side-navbar-container ul li a {
+    display: block;
+    padding: 8px 0;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    position: relative;
+}
+
+/* animated underline */
+.side-navbar-container ul li a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -4px;
+    width: 0;
+    height: 2px;
+    background: #c084fc; /* purple glow */
+    transition: width 0.5s ease, left 0.5s ease;
+}
+
+/* hover effect */
+.side-navbar-container ul li a:hover::after {
+    width: 100%;
+    left: 0;
+}
+
 
 
 
