@@ -425,10 +425,28 @@ main{
     left: 0;
 }
 
+
+
+
+#page1{
+
+  min-height: 100vh;
+
+}
+
+
 }
 
 
 @media (min-width: 721px) and (max-width:992px){
+
+
+  #page1{
+
+  min-height: 100vh;
+
+}
+
 
   #page1 nav ul{
     display: none;
