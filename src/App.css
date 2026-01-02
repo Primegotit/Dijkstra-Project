@@ -61,8 +61,15 @@ nav h3{
 visibility: hidden;
  width: 50px;
   height: 50px;
+  transition: all 0.5s;
+  cursor: pointer;
+
 }
 
+
+#menu-img:hover{
+  transform: scale(1.1);
+}
 
 nav ul{
   list-style-type: none;
@@ -230,9 +237,18 @@ main{
   justify-self: center;
   justify-content: center;
   align-items: center;
+  transition: all 0.5s;
 
-  
+  cursor: pointer;
 }
+
+#hero button:hover{
+
+  transform: scale(1.1);
+
+}
+
+
 
 #hero p{
   margin: 50px 0px 50px 0px;
@@ -296,6 +312,78 @@ main{
                0 0 80px rgb(112, 23, 207);
 
 
+}
+
+
+
+
+
+
+
+.side-navbar-container {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    width: 150px;
+
+    background: linear-gradient(
+        rgba(15, 51, 117, 0.75),
+        rgba(81, 11, 155, 0.67)
+    );
+
+    padding: 30px;
+    box-shadow: -2px 0 15px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 20px;
+    color: white;
+}
+
+.side-navbar-container ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+/* li */
+.side-navbar-container ul li {
+    position: relative;
+}
+
+/* link fills li */
+.side-navbar-container ul li a {
+    display: block;
+    padding: 8px 0;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    position: relative;
+}
+
+/* animated underline */
+.side-navbar-container ul li a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -4px;
+    width: 0;
+    height: 2px;
+    background: #c084fc; /* purple glow */
+    transition: width 0.5s ease, left 0.5s ease;
+}
+
+/* hover effect */
+.side-navbar-container ul li a:hover::after {
+    width: 100%;
+    left: 0;
 }
 
 }

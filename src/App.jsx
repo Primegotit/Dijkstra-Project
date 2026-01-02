@@ -5,6 +5,47 @@ import './App.css'
 
 function App() {
 
+  "use strict";
+let more_btn = document.getElementById("more-button");
+    let container = document.createElement("div");
+    container.classList.toggle("active");
+
+    let item_list = document.createElement("ul");
+    let item1 = document.createElement("li");
+    let item2 = document.createElement("li");
+    let item3 = document.createElement("li");
+    let item4 = document.createElement("li");
+    item1.innerHTML = `<a href="#page1">Home</a>`;
+    item4.innerHTML = `<a href="#page4">About</a>`;
+    item2.innerHTML = `<a href="#page2">Services</a>`;
+    item3.innerHTML = `<a href="#page4">Contact</a>`;
+
+    item_list.appendChild(item1);
+    item_list.appendChild(item2);
+    item_list.appendChild(item3);
+    item_list.appendChild(item4);
+    container.appendChild(item_list);
+
+    let autoCloseTimer;
+
+
+let openSideNavbar = () => {
+    container.classList.toggle("side-navbar-container");
+
+
+     document.body.appendChild(container);
+    
+
+    clearTimeout(autoCloseTimer);
+    autoCloseTimer = setTimeout(() => {
+        container.classList.remove("side-navbar-container");
+      container.classList.toggle("active");
+
+    }, 11000); 
+
+};
+
+
   return (
     <div id='page1'>
 
@@ -18,7 +59,7 @@ function App() {
 
         </ul>
 
-        <img id='menu-img' src='/menu burger-icon.png'></img>
+        <img id='menu-img'onClick={openSideNavbar} src='/menu burger-icon.png'></img>
 
       </nav>
 
