@@ -11,10 +11,10 @@ function App() {
       <nav>
         <h3> <img src="/trackway2.png" id='name-img' alt="" />TrackWay</h3>
         <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Services</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Contact us</a></li>
+          <li><a href="#" className='hover-link'>Home</a></li>
+          <li><a href="#" className='hover-link'>Services</a></li>
+          <li><a href="#" className='hover-link'>About</a></li>
+          <li><a href="#" className='hover-link'>Contact us</a></li>
 
         </ul>
 
@@ -27,7 +27,7 @@ function App() {
           <div id='image-container'>
             <img src="/trackway.png" alt="" />
           </div>
-          <h1>Welcome to TrackWay</h1>
+          <h1 className="glide-text">Welcome to TrackWay</h1>
           <h5>Where <span >algorithms</span> meet the road.</h5>
           <p>Plan, optimize, and track your deliveries in seconds. With real-time maps and intelligent route calculation, TrackWay gets you from point A to point B the fastest way possible.</p>
           <button>Get Started</button>

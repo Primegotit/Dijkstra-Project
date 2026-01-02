@@ -36,7 +36,9 @@ nav h3{
   height: 50px;
   text-align: center;
   line-height: 30px;
-  background-color: rgb(22, 83, 196);
+  /* background-color: rgb(22, 83, 196); */
+  background: linear-gradient(to right, rgb(15, 51, 117),rgb(81, 11, 155));
+
   font-size: clamp(14px, 2vw, 18px);
   border-radius: 10px;
   display: flex;
@@ -81,10 +83,39 @@ nav ul li a{
 
 }
 
+
+.hover-link {
+  position: relative;
+  text-decoration: none;
+  color: #fff;
+  font-size: 18px;
+}
+
+/* underline */
+.hover-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background-color: #9d00ff;
+  transition: width 0.3s ease;
+}
+
+/* hover */
+.hover-link:hover::after {
+  width: 100%;
+}
+
+
 nav ul li a:hover{
-  text-shadow: 0 0 5px rgb(22, 83, 196),
-               0 0 20px rgb(22, 83, 196),
-               0 0 30px rgb(22, 83, 196);
+  color: rgb(112, 23, 207);
+  cursor: pointer;
+    text-shadow: 0 0 2px rgb(112, 23, 207),
+               0 0 40px rgb(112, 23, 207),
+               0 0 80px rgb(112, 23, 207);
+
 }
 
 main{
@@ -121,6 +152,46 @@ main{
   text-align: center;
 
 }
+
+
+
+
+
+.glide-text {
+  font-size: clamp(24px, 5vw, 72px);
+  font-weight: 700;
+  text-align: center;
+
+  background: linear-gradient(
+    90deg,
+    #a855f7,
+    #5ca9eb,
+    #180b35,
+    #a855f7
+  );
+
+  background-size: 300% 300%;
+  animation: gradientMove 10s linear infinite;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 300% 50%;
+  }
+}
+
+
+
+
+
+
 
 #hero h5{
   /* background: linear-gradient(to right, rgb(15, 51, 117),rgb(81, 11, 155)); */
