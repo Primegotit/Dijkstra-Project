@@ -24,7 +24,7 @@ function MapComponent() {
   }, []);
 
   return( 
-  <div id="map" style={{ height: '1000px', width: '100%' }}>
+  <div id="map" >
 
   </div>
 
