@@ -14,7 +14,7 @@ function MapComponent() {
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';
     script.onload = () => {
-      const map = L.map('map').setView([48.9667, 8.2333], 13);
+      const map = L.map('map').setView([-20.1702, 28.5812], 20);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors',
         maxZoom: 19
