@@ -641,6 +641,7 @@ main{
   border-radius: 10px;
 
   padding: 20px;
+  margin-bottom: 40px ;
 
 }
 
@@ -720,6 +721,8 @@ main{
 
 #start-container p{
   font-size: clamp(14px, 2vw, 17px);
+  margin-bottom: 60px ;
+
 
 }
 
