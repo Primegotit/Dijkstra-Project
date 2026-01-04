@@ -5,7 +5,7 @@ function Page2(){
 
     return(
         <div id="page2">
-            <div id="map">
+            <div id="maps">
                 <MapComponent/>
                 
             </div>

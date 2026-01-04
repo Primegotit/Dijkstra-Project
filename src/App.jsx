@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import Page2  from './page2'
+import Page3 from './page3'
 
 
 function App() {
@@ -85,6 +86,8 @@ let openSideNavbar = () => {
     </div>
 
     <Page2/>
+    <Page3/>
+
     </>
   )
 }
