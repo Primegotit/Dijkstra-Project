@@ -820,3 +820,67 @@ main{
   gap: 3px;
   flex-direction: column;
 }
+
+
+#page3 .buttons{
+
+  height: 50px;
+  width: 170px;
+  padding: 2px 16px;
+  text-align: center;
+  /* background: linear-gradient(to right, rgb(15, 51, 117),rgb(81, 11, 155)); */
+  background-color: rgb(15, 51, 117);
+  border-radius: 10px;
+  border: none;
+  color: #eee;
+  font-weight: bold;
+  display: flex;
+  justify-self: center;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.5s;
+  font-size: clamp(14px, 2vw, 15px);
+  cursor: pointer;
+}
+#page3 .buttons:hover{
+
+  transform: scale(1.1);
+}
+
+
+.button-box section #addStartBtn{
+  background-color: rgb(38, 143, 20);
+
+}
+
+.button-box section #addEndBtn{
+  background-color: rgb(206, 35, 26);
+
+}
+
+.button-box section #addStopBtn{
+  background-color: rgb(200, 206, 26);
+
+}
+
+.button-box section #calcRouteBtn{
+
+}
+
+.button-box section #optRouteBtn{
+
+}
+.button-box section #resetBtn{
+
+}
+.button-box{
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.button-box section{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
