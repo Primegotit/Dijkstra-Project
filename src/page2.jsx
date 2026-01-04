@@ -1,5 +1,5 @@
 import MapComponent from "./MapComponent"
-import Map from "./MapComponent"
+import ControlPanel from "./ControlPanel"
 
 function Page2(){
 
@@ -10,8 +10,8 @@ function Page2(){
                 
             </div>
 
-            <div id="details">
-
+            <div id="control-panel">
+                <ControlPanel></ControlPanel>
             </div>
         </div>
     )
