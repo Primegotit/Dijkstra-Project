@@ -1,11 +1,11 @@
-#root {  
+#root {
   margin: 0;
   padding: 0;
 }
 
 
 /* ######### UNIVERSAL FONT SIZES ################# */
-/* 
+/*
 #start-container h3{
   font-size: clamp(32px, 4vw, 70px);
 
@@ -101,9 +101,9 @@ nav ul li a{
   text-decoration: none;
   color: #eee;
   font-size: clamp(14px, 2vw, 17px);
-  
+
   font-weight: 500 ;
-  transition: all 0.5s;        
+  transition: all 0.5s;
 
 }
 
@@ -285,7 +285,7 @@ main{
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
 
-  
+
 }
 
 
@@ -295,14 +295,14 @@ main{
     }
     50%{
         transform: translateY(20px);
-        
+
     }
 
     100%{
         transform: translateY(0px);
 
     }
-    
+
 }
 
 
@@ -582,7 +582,7 @@ main{
 
 
 #page2{
- 
+
   /* background: linear-gradient(130deg , #000000, #000000,#011); */
   background: linear-gradient(130deg ,rgb(28, 4, 54),  #000000, #000000,rgb(3, 19, 48));
   height: 100vh;
@@ -687,7 +687,7 @@ main{
 
 
   #page2{
- 
+
   /* background: linear-gradient(130deg , #000000, #000000,#011); */
   background: linear-gradient(130deg ,rgb(28, 4, 54),  #000000, #000000,rgb(3, 19, 48));
 
@@ -750,64 +750,90 @@ main{
 
 
 #page3{
-  /* background: linear-gradient(130deg ,rgb(28, 4, 54),  #000000, #000000,rgb(3, 19, 48)); */
+  background: linear-gradient(130deg ,rgb(28, 4, 54),  #000000, #000000,rgb(3, 19, 48));
   height: 100vh;
   color: #333;
   padding: 10px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+#page3-container{
   display: grid;
   grid-template-columns:  1fr 1.5fr;
   column-gap: 20px;
-}
+  justify-content: center;
+  align-items: center;
+  width: 90%;
 
+
+}
 #map-container{
   width: 100%;
-  background-color: red;
 
 }
 
 
 #route-planner-container{
-  border: 1px solid rgb(58, 61, 67);
+  height: 80vh;
+  /* border: 1px solid rgb(58, 61, 67); */
   border-radius: 10px;
   padding: 0px 20px;
+  color: white;
+    box-shadow:
+    0 13px 16px rgba(0, 0, 0, 0.16),
+    0 13px 16px rgba(0, 0, 0, 0.23);
+  background-color:  #171717;
 }
 
 #route-planner-container h3{
-  color: #556667;
+  color: #eee;
 
-    font-size: clamp(22px, 2vw, 30px);
+    font-size: clamp(22px, 2vw, 25px);
     text-align: center;
 }
 
 #page3 #map{
-  height: 100vh;
+  height: 80vh;
+    color: white;
+    box-shadow:
+    0 13px 16px rgba(0, 0, 0, 0.16),
+    0 13px 16px rgba(0, 0, 0, 0.23);
 }
 
 #route-settings{
   display: flex;
   align-items: start           ;
   flex-direction: column;
-  gap: 40px;
+  gap: 20px;
+  padding: 0px 20px;
+
 }
 
 
 
 .labels{
-  font-size: clamp(14px, 2vw, 17px);
-  font-weight: 700;
-  color: #556667;
+  font-size: clamp(14px, 2vw, 16px);
+  font-weight: 500;
+      color: #eee;
+
+
 }
 
 .textboxes{
-  padding: 10px;
+  padding: 6px;
   border: 1px solid gray;
   font-size: clamp(14px, 2vw, 17px);
   border-radius: 4px;
-  width: 230px;
+  width: 190px;
+  text-align: center;
+  background-color: #ddd;
 }
 
 #select-group{
-  width: 250px;
+    width: 200px;
 
 }
 .route-box{
@@ -817,15 +843,15 @@ main{
 
 .route-box section{
   display: flex;
-  gap: 3px;
+  gap: 6px;
   flex-direction: column;
 }
 
 
 #page3 .buttons{
 
-  height: 50px;
-  width: 170px;
+  height: 40px;
+  width: 150px;
   padding: 2px 16px;
   text-align: center;
   /* background: linear-gradient(to right, rgb(15, 51, 117),rgb(81, 11, 155)); */
@@ -841,6 +867,10 @@ main{
   transition: all 0.5s;
   font-size: clamp(14px, 2vw, 15px);
   cursor: pointer;
+
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.16),
+    0 3px 6px rgba(0, 0, 0, 0.23);
 }
 #page3 .buttons:hover{
 
@@ -854,29 +884,36 @@ main{
 }
 
 .button-box section #addEndBtn{
-  background-color: rgb(206, 35, 26);
+  background-color: rgb(26, 86, 206);
 
 }
 
 .button-box section #addStopBtn{
-  background-color: rgb(200, 206, 26);
+  background-color: rgb(221, 147, 56);
 
 }
 
 .button-box section #calcRouteBtn{
+    background-color: rgb(143, 20, 108);
+
+
 
 }
 
 .button-box section #optRouteBtn{
+  background-color: rgb(133, 56, 221);
+
 
 }
 .button-box section #resetBtn{
+  background-color: rgb(206, 35, 26);
+
 
 }
 .button-box{
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 30px;
 }
 
 .button-box section{

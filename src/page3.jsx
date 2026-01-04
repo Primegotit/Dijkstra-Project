@@ -4,8 +4,10 @@ function Page3(){
     return(
         
         <div id="page3">
+            <div id="page3-container">
 
-            <div id="route-planner-container">
+        
+                <div id="route-planner-container">
                 <h3>Tour configuration</h3>
 
                 <div id="route-settings">
@@ -89,15 +91,15 @@ function Page3(){
 
                 </div>
 
+                </div>
+
+                <div id="map-container">
+                    <MapComponent/>
+
+                </div>
+
             </div>
-
-            <div id="map-container">
-                <MapComponent/>
-
-            </div>
-
         </div>
-
     
     )
 }
