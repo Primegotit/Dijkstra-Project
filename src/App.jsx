@@ -2,6 +2,8 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import Page2  from './page2'
+
 
 function App() {
 
@@ -47,6 +49,8 @@ let openSideNavbar = () => {
 
 
   return (
+    <>
+    
     <div id='page1'>
 
       <nav>
@@ -79,6 +83,9 @@ let openSideNavbar = () => {
         </section>
       </main>
     </div>
+
+    <Page2/>
+    </>
   )
 }
 

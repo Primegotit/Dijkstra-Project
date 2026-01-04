@@ -573,3 +573,23 @@ main{
 
 
 }
+
+
+
+
+#page2{
+ 
+  /* background: linear-gradient(130deg , #000000, #000000,#011); */
+  background: linear-gradient(130deg ,rgb(28, 4, 54),  #000000, #000000,rgb(3, 19, 48));
+
+
+  height: 100vh;
+  color: #eee;
+  padding: 0px 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 2fr;
+  row-gap: 20px;
+
+}
+
