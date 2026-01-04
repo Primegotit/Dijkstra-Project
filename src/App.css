@@ -3,6 +3,23 @@
   padding: 0;
 }
 
+
+/* ######### UNIVERSAL FONT SIZES ################# */
+/* 
+#start-container h3{
+  font-size: clamp(32px, 4vw, 70px);
+
+}
+
+
+#start-container p{
+  font-size: clamp(14px, 2vw, 17px);
+
+} */
+
+/* ################################################# */
+
+
 #page1{
   /* background: linear-gradient(130deg , #000000, #000000,#011); */
   background: linear-gradient(130deg ,rgb(3, 19, 48),  #000000, #000000,rgb(28, 4, 54));
@@ -577,6 +594,11 @@ main{
 
 }
 
+#map{
+  width: 100%;
+  display: flex;
+  justify-self: center;
+}
 
 
 #start-container{
@@ -607,6 +629,7 @@ main{
   justify-self: center;
   justify-content: center;
   align-items: center;
+  font-size: clamp(28px, 2vw, 32px);
 
 
 }
@@ -642,8 +665,23 @@ main{
 }
 
 
+#page2 .buttons:hover{
+
+  transform: scale(1.1);
+
+}
+
+
 
 @media (max-width: 720px) {
+
+  #map{
+  width: 100%;
+  display: flex;
+  justify-self: center;
+
+}
+
 
   #page2{
  
@@ -673,6 +711,17 @@ main{
   justify-self: center;
 }
 
+#start-container h3{
+    font-size: clamp(22px, 2vw, 30px);
+
+
+}
+
+
+#start-container p{
+  font-size: clamp(14px, 2vw, 17px);
+
+}
 
 #start-container p{
   border-left: 2px solid rgb(64, 11, 121);
