@@ -33,8 +33,8 @@ function Page3(){
                         <section>
                             <label htmlFor="" className="labels">Optimize Route</label>
                                 <select name="" id="select-group" className="textboxes" >
-                                <option value="">Car</option>
-                                <option value="">Van</option>
+                                <option value="">Shortest distance</option>
+                                <option value="">Safest route</option>
                                 <option value="">Bike</option>
 
                             </select>
@@ -75,8 +75,8 @@ function Page3(){
                     <div className="button-box">
                         <section>
                             <button className="buttons"id="addStartBtn">Add Start Point</button>
-                            <button id="addEndBtn" className="buttons">Add End Point</button>
                             <button id="addStopBtn"className="buttons">Add Stop</button>
+                            <button id="addEndBtn" className="buttons">Add End Point</button>
                         </section>
                      
                         <section>
