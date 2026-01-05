@@ -390,8 +390,11 @@ function RouteplannerApp() {
       marginLeft: !isMobile && sidebarOpen ? '0' : '0'
     },
     map: {
-      width: '100%',
-      height: '100%'
+      display : "flex",
+      justifySelf: "center",
+      alignSelf: "center",
+      width: '90%',
+      height: '90%'
     },
     loadingOverlay: {
       position: 'absolute',
