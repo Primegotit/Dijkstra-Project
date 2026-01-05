@@ -969,12 +969,12 @@ main{
 }
 
 #route-planner-container{
-  min-height: clamp(300px, 70vh, 800px);
+  min-height: clamp(300px, 70vh, 540px);
   height: auto;
 
   /* border: 1px solid rgb(58, 61, 67); */
   border-radius: 10px;
-  padding: 0px 20px;
+  padding: 0px 5px;
   color: white;
     box-shadow:
     0 13px 16px rgba(0, 0, 0, 0.16),
@@ -1015,7 +1015,7 @@ main{
   justify-content: center;
   flex-direction: column;
   gap: 20px;
-  padding: 0px 20px;
+  padding: 0px 10px;
 
 }
 
