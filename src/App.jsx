@@ -4,8 +4,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import Page2  from './page2'
 import Page3 from './page3'
-import RouteplannerApp from './RouteplannerAPp'
-
+import RouteplannerApp from './RouteplannerApp'
 
 
 function App() {
