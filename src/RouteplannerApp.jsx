@@ -60,12 +60,14 @@ function RouteplannerApp() {
   }, []);
 
   useEffect(() => {
-    if (!mapInstanceRef.current) return;
+    if (!mapInstanceRef.current || !mapInstanceRef.current._loaded) return; // Ensure map is fully loaded
 
     const handleMapClick = (e) => {
       if (!mode) return;
 
       const { lat, lng } = e.latlng;
+      if (isNaN(lat) || isNaN(lng)) return; // Safety check for valid coords
+
       const newPoint = {
         id: Date.now(),
         lat,
@@ -75,13 +77,15 @@ function RouteplannerApp() {
 
       setPoints(prev => [...prev, newPoint]);
 
-      const color = mode === 'start' ? 'green' : 'red';
-      const marker = window.L.circleMarker([lat, lng], {
-        color,
-        fillColor: color,
-        fillOpacity: 0.7,
-        radius: 8
-      }).addTo(mapInstanceRef.current);
+      // Use L.marker instead of L.circleMarker to avoid bounds errors
+      const icon = window.L.divIcon({
+        className: 'custom-marker',
+        html: `<div style="background-color: ${mode === 'start' ? 'green' : 'red'}; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white;"></div>`,
+        iconSize: [16, 16],
+        iconAnchor: [8, 8]
+      });
+
+      const marker = window.L.marker([lat, lng], { icon }).addTo(mapInstanceRef.current);
 
       const label = mode === 'start' ? 'START' : 'END';
       marker.bindPopup(label);
