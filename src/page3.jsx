@@ -18,13 +18,9 @@ function Page3(){
                             <input type="text" className="textboxes" />
                         </section>
                         <section>
-                            <label htmlFor="" className="labels">Vehicle Type</label>
-                            <select name="" id="select-group" className="textboxes" >
-                                <option value="">Car</option>
-                                <option value="">Van</option>
-                                <option value="">Bike</option>
+                            <label htmlFor="" className="labels">Number of stops</label>
+                            <input type="text" className="textboxes" />
 
-                            </select>
                         </section>
                     </div>
 
@@ -62,15 +58,6 @@ function Page3(){
                     </div>
 
 
-
-                    <div className="route-box">
-                        <section>
-                            <label htmlFor="" className="labels">Number of stops</label>
-                            <input type="text" className="textboxes" />
-
-                        </section>
-                        
-                    </div>
 
                     <div className="button-box">
                         <section>
