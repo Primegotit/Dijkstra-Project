@@ -969,8 +969,9 @@ main{
 }
 
 #route-planner-container{
-  min-height: 70vh;
+  min-height: clamp(300px, 70vh, 800px);
   height: auto;
+
   /* border: 1px solid rgb(58, 61, 67); */
   border-radius: 10px;
   padding: 0px 20px;
