@@ -6,7 +6,6 @@ function MapComponent() {
   const mapInstanceRef = useRef(null);
 
   useEffect(() => {
-    // Load Leaflet CSS only once
     if (!document.getElementById('leaflet-css')) {
       const link = document.createElement('link');
       link.id = 'leaflet-css';
@@ -15,7 +14,6 @@ function MapComponent() {
       document.head.appendChild(link);
     }
 
-    // Load Leaflet JS only once
     if (!window.L) {
       const script = document.createElement('script');
       script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';
@@ -25,7 +23,6 @@ function MapComponent() {
       initializeMap();
     }
 
-    // Initialize the map only once
     function initializeMap() {
       if (mapContainerRef.current && !mapInstanceRef.current) {
         mapInstanceRef.current = window.L.map(mapContainerRef.current).setView([-20.1702, 28.5812], 13);
@@ -36,7 +33,6 @@ function MapComponent() {
       }
     }
 
-    // Cleanup on unmount
     return () => {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
