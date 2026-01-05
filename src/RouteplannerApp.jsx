@@ -272,7 +272,7 @@ function RouteplannerApp() {
       position: 'relative'
     },
     sidebar: {
-      width: sidebarOpen ? (isMobile ? '100%' : '350px') : '0',
+      width: sidebarOpen ? (isMobile ? '40%' : '350px') : '0',
       padding: sidebarOpen ? '20px' : '0',
       background: 'linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%)',
       overflowY: 'auto',
