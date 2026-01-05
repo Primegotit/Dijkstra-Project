@@ -23,6 +23,27 @@ function RouteplannerApp() {
   const [totalDistance, setTotalDistance] = useState(0);
   const [estimatedTime, setEstimatedTime] = useState(0);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if mobile on mount and resize
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+      if (window.innerWidth <= 768) {
+        setSidebarOpen(false);
+      } else {
+        setSidebarOpen(true);
+      }
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
 
   // Initialize map
   useEffect(() => {
@@ -183,6 +204,11 @@ function RouteplannerApp() {
             mapInstanceRef.current.fitBounds(bounds, { padding: [50, 50] });
           }
         }
+        
+        // Close sidebar on mobile after calculation
+        if (isMobile) {
+          setSidebarOpen(false);
+        }
       } else {
         alert('No route found between the selected points');
       }
@@ -224,29 +250,45 @@ function RouteplannerApp() {
     setTotalDistance(0);
     setEstimatedTime(0);
     setMode(null);
+    
+    // Close sidebar on mobile after reset
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
   };
 
-  // CSS for the component
+  // Toggle sidebar
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  // CSS for the component - Now with responsive design
   const styles = {
     container: {
       display: 'flex',
       height: '100vh',
       fontFamily: 'Arial, sans-serif',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      position: 'relative'
     },
     sidebar: {
-      width: '320px',
-      padding: '20px',
+      width: sidebarOpen ? (isMobile ? '100%' : '350px') : '0',
+      padding: sidebarOpen ? '20px' : '0',
       background: 'linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%)',
       overflowY: 'auto',
       boxShadow: '2px 0 10px rgba(0,0,0,0.1)',
-      zIndex: 1000
+      zIndex: 1000,
+      transition: 'all 0.3s ease',
+      position: isMobile && sidebarOpen ? 'fixed' : 'relative',
+      height: isMobile && sidebarOpen ? '100%' : 'auto',
+      left: 0,
+      top: 0
     },
     title: {
       marginTop: 0,
       marginBottom: '25px',
       color: '#2c3e50',
-      fontSize: '24px',
+      fontSize: isMobile ? '20px' : '24px',
       fontWeight: '600',
       textAlign: 'center'
     },
@@ -329,7 +371,7 @@ function RouteplannerApp() {
     instructionsList: {
       paddingLeft: '20px',
       margin: '10px 0',
-      fontSize: '13px',
+      fontSize: isMobile ? '12px' : '13px',
       color: '#6c757d',
       lineHeight: '1.5'
     },
@@ -343,7 +385,9 @@ function RouteplannerApp() {
     mapContainer: {
       flex: 1,
       position: 'relative',
-      minHeight: '400px'
+      minHeight: '400px',
+      transition: 'all 0.3s ease',
+      marginLeft: !isMobile && sidebarOpen ? '0' : '0'
     },
     map: {
       width: '100%',
@@ -362,14 +406,105 @@ function RouteplannerApp() {
       zIndex: 1000,
       fontSize: '16px',
       color: '#6c757d'
+    },
+    toggleButton: {
+      position: 'absolute',
+      top: '15px',
+      left: isMobile || !sidebarOpen ? '15px' : 'calc(350px + 15px)',
+      zIndex: 1001,
+      background: '#2c3e50',
+      color: 'white',
+      border: 'none',
+      borderRadius: '50%',
+      width: '50px',
+      height: '50px',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: '20px',
+      boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+      transition: 'all 0.3s ease'
+    },
+    closeButton: {
+      display: isMobile && sidebarOpen ? 'block' : 'none',
+      position: 'absolute',
+      top: '15px',
+      right: '15px',
+      background: '#e74c3c',
+      color: 'white',
+      border: 'none',
+      borderRadius: '50%',
+      width: '40px',
+      height: '40px',
+      cursor: 'pointer',
+      fontSize: '20px',
+      zIndex: 1002
+    },
+    mobileHeader: {
+      display: isMobile && sidebarOpen ? 'flex' : 'none',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: '20px',
+      paddingBottom: '15px',
+      borderBottom: '2px solid #dee2e6'
+    },
+    overlay: {
+      display: isMobile && sidebarOpen ? 'block' : 'none',
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'rgba(0,0,0,0.5)',
+      zIndex: 999,
+      transition: 'all 0.3s ease'
     }
   };
 
   return (
     <div style={styles.container}>
+      {/* Sidebar Toggle Button */}
+      <button 
+        onClick={toggleSidebar}
+        style={styles.toggleButton}
+        title={sidebarOpen ? "Close sidebar" : "Open sidebar"}
+      >
+        {sidebarOpen ? '✕' : '☰'}
+      </button>
+
+      {/* Overlay for mobile when sidebar is open */}
+      {isMobile && sidebarOpen && (
+        <div 
+          style={styles.overlay}
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <div style={styles.sidebar}>
-        <h2 style={styles.title}>🗺️ Route Planner</h2>
+        {/* Close button for mobile */}
+        {isMobile && sidebarOpen && (
+          <button 
+            onClick={() => setSidebarOpen(false)}
+            style={styles.closeButton}
+            title="Close"
+          >
+            ✕
+          </button>
+        )}
+
+        {/* Mobile header */}
+        {isMobile && sidebarOpen && (
+          <div style={styles.mobileHeader}>
+            <h2 style={{...styles.title, margin: 0, fontSize: '18px'}}>🗺️ Route Planner</h2>
+          </div>
+        )}
+
+        {/* Desktop title */}
+        {!isMobile && (
+          <h2 style={styles.title}>🗺️ Route Planner</h2>
+        )}
         
         {/* Distance Display */}
         <div style={styles.inputGroup}>
@@ -474,6 +609,7 @@ function RouteplannerApp() {
             <li>Click "Add Start Point" then click on the map</li>
             <li>Click "Add End Point" then click on the map</li>
             <li>Click "Calculate Route" to find the shortest path</li>
+            {isMobile && <li>Tap ☰ to open/close sidebar</li>}
           </ol>
           <p style={styles.note}>
             ℹ️ Uses OSRM routing service with Dijkstra's algorithm
