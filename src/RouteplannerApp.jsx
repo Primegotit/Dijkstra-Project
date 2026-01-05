@@ -22,8 +22,11 @@ function RouteplannerApp() {
   const [mode, setMode] = useState(null);
   const [totalDistance, setTotalDistance] = useState(0);
   const [estimatedTime, setEstimatedTime] = useState(0);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
+  // Initialize map
   useEffect(() => {
+    // Load Leaflet CSS if not already loaded
     if (!document.getElementById('leaflet-css')) {
       const link = document.createElement('link');
       link.id = 'leaflet-css';
@@ -34,39 +37,57 @@ function RouteplannerApp() {
 
     const initMap = () => {
       if (mapContainerRef.current && !mapInstanceRef.current) {
-        mapInstanceRef.current = window.L.map(mapContainerRef.current).setView([51.505, -0.09], 13); // Default to London
-        window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; OpenStreetMap contributors',
-          maxZoom: 19,
-        }).addTo(mapInstanceRef.current);
+        try {
+          mapInstanceRef.current = window.L.map(mapContainerRef.current).setView([51.505, -0.09], 13);
+          window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+            maxZoom: 19,
+          }).addTo(mapInstanceRef.current);
+          
+          // Mark map as loaded
+          mapInstanceRef.current.whenReady(() => {
+            setMapLoaded(true);
+          });
+        } catch (error) {
+          console.error('Error initializing map:', error);
+        }
       }
     };
 
+    // Load Leaflet JS if not already loaded
     if (!window.L) {
       const script = document.createElement('script');
       script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';
-      script.onload = initMap;
+      script.onload = () => {
+        initMap();
+      };
+      script.onerror = () => {
+        console.error('Failed to load Leaflet script');
+      };
       document.body.appendChild(script);
     } else {
       initMap();
     }
 
+    // Cleanup function
     return () => {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
+      setMapLoaded(false);
     };
   }, []);
 
+  // Handle map clicks
   useEffect(() => {
-    if (!mapInstanceRef.current || !mapInstanceRef.current._loaded) return; // Ensure map is fully loaded
+    if (!mapInstanceRef.current || !mapLoaded) return;
 
     const handleMapClick = (e) => {
       if (!mode) return;
 
       const { lat, lng } = e.latlng;
-      if (isNaN(lat) || isNaN(lng)) return; // Safety check for valid coords
+      if (isNaN(lat) || isNaN(lng)) return;
 
       const newPoint = {
         id: Date.now(),
@@ -77,24 +98,24 @@ function RouteplannerApp() {
 
       setPoints(prev => [...prev, newPoint]);
 
-      // Use L.marker instead of L.circleMarker to avoid bounds errors
+      // Create custom marker icon
       const icon = window.L.divIcon({
         className: 'custom-marker',
-        html: `<div style="background-color: ${mode === 'start' ? 'green' : 'red'}; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white;"></div>`,
+        html: `<div style="background-color: ${mode === 'start' ? 'green' : 'red'}; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5);"></div>`,
         iconSize: [16, 16],
         iconAnchor: [8, 8]
       });
 
       const marker = window.L.marker([lat, lng], { icon }).addTo(mapInstanceRef.current);
-
       const label = mode === 'start' ? 'START' : 'END';
-      marker.bindPopup(label);
+      marker.bindPopup(label).openPopup();
       markersRef.current.push(marker);
 
       setMode(null);
     };
 
-    mapInstanceRef.current.off('click');
+    // Remove any existing click handlers and add new one
+    mapInstanceRef.current.off('click', handleMapClick);
     mapInstanceRef.current.on('click', handleMapClick);
 
     return () => {
@@ -102,8 +123,9 @@ function RouteplannerApp() {
         mapInstanceRef.current.off('click', handleMapClick);
       }
     };
-  }, [mode, points]);
+  }, [mode, mapLoaded]);
 
+  // Calculate route using OSRM API
   const calculateRoute = async () => {
     const startPoint = points.find(p => p.type === 'start');
     const endPoint = points.find(p => p.type === 'end');
@@ -113,7 +135,13 @@ function RouteplannerApp() {
       return;
     }
 
-    // Use OSRM API for road-following routes (free, no key needed)
+    // Check if map is ready
+    if (!mapInstanceRef.current || !mapLoaded) {
+      alert('Map is not ready yet. Please wait a moment.');
+      return;
+    }
+
+    // Use OSRM API for road-following routes
     const url = `https://router.project-osrm.org/route/v1/driving/${startPoint.lng},${startPoint.lat};${endPoint.lng},${endPoint.lat}?overview=full&geometries=geojson`;
 
     try {
@@ -123,163 +151,346 @@ function RouteplannerApp() {
       if (data.routes && data.routes.length > 0) {
         const route = data.routes[0];
         const geometry = route.geometry.coordinates;
-        const routeCoords = geometry.map(coord => [coord[1], coord[0]]); // Swap to [lat, lng]
+        
+        // Convert coordinates from [lng, lat] to [lat, lng] for Leaflet
+        const routeCoords = geometry.map(coord => [coord[1], coord[0]]);
 
+        // Clear existing route
         if (routeLineRef.current) {
           mapInstanceRef.current.removeLayer(routeLineRef.current);
+          routeLineRef.current = null;
         }
 
+        // Create new route line
         routeLineRef.current = window.L.polyline(routeCoords, {
-          color: 'blue',
-          weight: 4,
-          opacity: 0.7
+          color: '#2196F3',
+          weight: 5,
+          opacity: 0.8,
+          lineJoin: 'round'
         }).addTo(mapInstanceRef.current);
 
-        // Extract distance and duration from API response
-        const distance = route.distance / 1000; // Convert to km
-        const duration = route.duration / 60; // Convert to minutes
+        // Extract distance and duration
+        const distance = route.distance / 1000; // meters to km
+        const duration = route.duration / 60; // seconds to minutes
 
-        setTotalDistance(distance.toFixed(2));
-        setEstimatedTime(duration.toFixed(0));
-        
-        mapInstanceRef.current.fitBounds(routeLineRef.current.getBounds());
+        setTotalDistance(parseFloat(distance.toFixed(2)));
+        setEstimatedTime(Math.round(duration));
+
+        // Fit map to show the entire route
+        if (routeLineRef.current) {
+          const bounds = routeLineRef.current.getBounds();
+          if (bounds.isValid()) {
+            mapInstanceRef.current.fitBounds(bounds, { padding: [50, 50] });
+          }
+        }
       } else {
-        alert('No route found');
+        alert('No route found between the selected points');
       }
     } catch (error) {
       console.error('Error fetching route:', error);
-      alert('Error calculating route. Check console for details.');
+      
+      // Fallback: Calculate straight-line distance
+      const fallbackDistance = calculateDistance(
+        startPoint.lat, 
+        startPoint.lng,
+        endPoint.lat, 
+        endPoint.lng
+      );
+      setTotalDistance(parseFloat(fallbackDistance.toFixed(2)));
+      setEstimatedTime(Math.round((fallbackDistance / 50) * 60)); // Estimate at 50 km/h
+      
+      alert('Routing service temporarily unavailable. Using straight-line distance estimate.');
     }
   };
 
+  // Reset everything
   const reset = () => {
-    markersRef.current.forEach(marker => mapInstanceRef.current.removeLayer(marker));
-    if (routeLineRef.current) {
-      mapInstanceRef.current.removeLayer(routeLineRef.current);
-    }
+    // Remove markers
+    markersRef.current.forEach(marker => {
+      if (marker && mapInstanceRef.current) {
+        mapInstanceRef.current.removeLayer(marker);
+      }
+    });
     markersRef.current = [];
-    routeLineRef.current = null;
+    
+    // Remove route line
+    if (routeLineRef.current && mapInstanceRef.current) {
+      mapInstanceRef.current.removeLayer(routeLineRef.current);
+      routeLineRef.current = null;
+    }
+    
+    // Reset state
     setPoints([]);
     setTotalDistance(0);
     setEstimatedTime(0);
     setMode(null);
   };
 
+  // CSS for the component
+  const styles = {
+    container: {
+      display: 'flex',
+      height: '100vh',
+      fontFamily: 'Arial, sans-serif',
+      overflow: 'hidden'
+    },
+    sidebar: {
+      width: '320px',
+      padding: '20px',
+      background: 'linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%)',
+      overflowY: 'auto',
+      boxShadow: '2px 0 10px rgba(0,0,0,0.1)',
+      zIndex: 1000
+    },
+    title: {
+      marginTop: 0,
+      marginBottom: '25px',
+      color: '#2c3e50',
+      fontSize: '24px',
+      fontWeight: '600',
+      textAlign: 'center'
+    },
+    inputGroup: {
+      marginBottom: '20px'
+    },
+    label: {
+      display: 'block',
+      marginBottom: '8px',
+      fontWeight: '600',
+      color: '#495057',
+      fontSize: '14px'
+    },
+    input: {
+      width: '100%',
+      padding: '10px 12px',
+      borderRadius: '6px',
+      border: '1px solid #ced4da',
+      background: '#ffffff',
+      fontSize: '14px',
+      color: '#495057',
+      boxSizing: 'border-box'
+    },
+    sectionTitle: {
+      marginTop: '25px',
+      marginBottom: '15px',
+      color: '#2c3e50',
+      fontSize: '18px',
+      fontWeight: '600',
+      borderBottom: '2px solid #dee2e6',
+      paddingBottom: '8px'
+    },
+    button: {
+      width: '100%',
+      padding: '12px',
+      marginBottom: '12px',
+      border: 'none',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      fontWeight: '600',
+      fontSize: '14px',
+      transition: 'all 0.2s ease',
+      boxSizing: 'border-box'
+    },
+    startButton: {
+      background: mode === 'start' ? '#2ecc71' : points.some(p => p.type === 'start') ? '#95a5a6' : '#ffffff',
+      color: mode === 'start' || points.some(p => p.type === 'start') ? '#ffffff' : '#2c3e50',
+      border: '2px solid #2ecc71',
+      cursor: points.some(p => p.type === 'start') ? 'not-allowed' : 'pointer'
+    },
+    endButton: {
+      background: mode === 'end' ? '#e74c3c' : points.some(p => p.type === 'end') ? '#95a5a6' : '#ffffff',
+      color: mode === 'end' || points.some(p => p.type === 'end') ? '#ffffff' : '#2c3e50',
+      border: '2px solid #e74c3c',
+      cursor: points.some(p => p.type === 'end') ? 'not-allowed' : 'pointer'
+    },
+    calculateButton: {
+      background: '#9b59b6',
+      color: '#ffffff',
+      marginTop: '10px'
+    },
+    resetButton: {
+      background: '#7f8c8d',
+      color: '#ffffff'
+    },
+    instructions: {
+      marginTop: '25px',
+      padding: '15px',
+      background: '#ffffff',
+      borderRadius: '8px',
+      border: '1px solid #dee2e6'
+    },
+    instructionsTitle: {
+      marginTop: 0,
+      marginBottom: '10px',
+      color: '#2c3e50',
+      fontSize: '16px',
+      fontWeight: '600'
+    },
+    instructionsList: {
+      paddingLeft: '20px',
+      margin: '10px 0',
+      fontSize: '13px',
+      color: '#6c757d',
+      lineHeight: '1.5'
+    },
+    note: {
+      fontSize: '12px',
+      color: '#95a5a6',
+      marginTop: '15px',
+      fontStyle: 'italic',
+      textAlign: 'center'
+    },
+    mapContainer: {
+      flex: 1,
+      position: 'relative',
+      minHeight: '400px'
+    },
+    map: {
+      width: '100%',
+      height: '100%'
+    },
+    loadingOverlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'rgba(255,255,255,0.8)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 1000,
+      fontSize: '16px',
+      color: '#6c757d'
+    }
+  };
+
   return (
-    <div style={{ display: 'flex', height: '100vh', fontFamily: 'Arial, sans-serif' }}>
-      <div style={{ width: '300px', padding: '20px', background: '#f5f5f5', overflowY: 'auto' }}>
-        <h2 style={{ marginTop: 0 }}>Route Planner</h2>
+    <div style={styles.container}>
+      {/* Sidebar */}
+      <div style={styles.sidebar}>
+        <h2 style={styles.title}>🗺️ Route Planner</h2>
         
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Total Distance</label>
+        {/* Distance Display */}
+        <div style={styles.inputGroup}>
+          <label style={styles.label}>Total Distance</label>
           <input 
             type="text" 
-            value={totalDistance ? `${totalDistance} km` : ''}
+            value={totalDistance ? `${totalDistance} km` : '--'}
             readOnly
-            style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc', background: '#e9e9e9' }}
+            style={styles.input}
           />
         </div>
 
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Estimated Time</label>
+        {/* Time Display */}
+        <div style={styles.inputGroup}>
+          <label style={styles.label}>Estimated Time</label>
           <input 
             type="text" 
-            value={estimatedTime ? `${estimatedTime} min` : ''}
+            value={estimatedTime ? `${estimatedTime} min` : '--'}
             readOnly
-            style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc', background: '#e9e9e9' }}
+            style={styles.input}
           />
         </div>
 
-        <div style={{ marginBottom: '20px' }}>
-          <h3>Add Points</h3>
-          <button 
-            onClick={() => setMode('start')}
-            disabled={points.some(p => p.type === 'start')}
-            style={{ 
-              width: '100%', 
-              padding: '10px', 
-              marginBottom: '10px', 
-              background: mode === 'start' ? '#4CAF50' : points.some(p => p.type === 'start') ? '#ccc' : '#fff',
-              color: mode === 'start' || points.some(p => p.type === 'start') ? '#fff' : '#000',
-              border: '2px solid #4CAF50',
-              borderRadius: '4px',
-              cursor: points.some(p => p.type === 'start') ? 'not-allowed' : 'pointer',
-              fontWeight: 'bold'
-            }}
-          >
-            {mode === 'start' ? 'Click map to add start' : points.some(p => p.type === 'start') ? 'Start Added ✓' : 'Add Start Point'}
-          </button>
-          <button 
-            onClick={() => setMode('end')}
-            disabled={points.some(p => p.type === 'end')}
-            style={{ 
-              width: '100%', 
-              padding: '10px', 
-              marginBottom: '10px', 
-              background: mode === 'end' ? '#f44336' : points.some(p => p.type === 'end') ? '#ccc' : '#fff',
-              color: mode === 'end' || points.some(p => p.type === 'end') ? '#fff' : '#000',
-              border: '2px solid #f44336',
-              borderRadius: '4px',
-              cursor: points.some(p => p.type === 'end') ? 'not-allowed' : 'pointer',
-              fontWeight: 'bold'
-            }}
-          >
-            {mode === 'end' ? 'Click map to add end' : points.some(p => p.type === 'end') ? 'End Added ✓' : 'Add End Point'}
-          </button>
-        </div>
+        {/* Add Points Section */}
+        <h3 style={styles.sectionTitle}>Add Points</h3>
+        <button 
+          onClick={() => setMode('start')}
+          disabled={points.some(p => p.type === 'start')}
+          style={{ ...styles.button, ...styles.startButton }}
+          onMouseEnter={(e) => {
+            if (!points.some(p => p.type === 'start')) {
+              e.target.style.transform = 'translateY(-2px)';
+              e.target.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = 'none';
+          }}
+        >
+          {mode === 'start' ? 'Click map to add start point' : 
+           points.some(p => p.type === 'start') ? '✓ Start Point Added' : 
+           '📍 Add Start Point'}
+        </button>
+        
+        <button 
+          onClick={() => setMode('end')}
+          disabled={points.some(p => p.type === 'end')}
+          style={{ ...styles.button, ...styles.endButton }}
+          onMouseEnter={(e) => {
+            if (!points.some(p => p.type === 'end')) {
+              e.target.style.transform = 'translateY(-2px)';
+              e.target.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = 'none';
+          }}
+        >
+          {mode === 'end' ? 'Click map to add end point' : 
+           points.some(p => p.type === 'end') ? '✓ End Point Added' : 
+           '📍 Add End Point'}
+        </button>
 
-        <div>
-          <h3>Actions</h3>
-          <button 
-            onClick={calculateRoute}
-            style={{ 
-              width: '100%', 
-              padding: '10px', 
-              marginBottom: '10px', 
-              background: '#9C27B0',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold'
-            }}
-          >
-            Calculate Route (Dijkstra-based)
-          </button>
-          <button 
-            onClick={reset}
-            style={{ 
-              width: '100%', 
-              padding: '10px', 
-              background: '#607D8B',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold'
-            }}
-          >
-            Reset
-          </button>
-        </div>
+        {/* Actions Section */}
+        <h3 style={styles.sectionTitle}>Actions</h3>
+        <button 
+          onClick={calculateRoute}
+          style={{ ...styles.button, ...styles.calculateButton }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'translateY(-2px)';
+            e.target.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = 'none';
+          }}
+        >
+          🚗 Calculate Route
+        </button>
+        
+        <button 
+          onClick={reset}
+          style={{ ...styles.button, ...styles.resetButton }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'translateY(-2px)';
+            e.target.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = 'none';
+          }}
+        >
+          🔄 Reset All
+        </button>
 
-        <div style={{ marginTop: '20px', padding: '10px', background: '#fff', borderRadius: '4px' }}>
-          <h4>Instructions:</h4>
-          <ol style={{ paddingLeft: '20px', margin: '5px 0', fontSize: '14px' }}>
-            <li>Click "Add Start Point" then click on map</li>
-            <li>Click "Add End Point" then click on map</li>
-            <li>Click "Calculate Route" for shortest path following roads</li>
+        {/* Instructions */}
+        <div style={styles.instructions}>
+          <h4 style={styles.instructionsTitle}>📋 Instructions</h4>
+          <ol style={styles.instructionsList}>
+            <li>Click "Add Start Point" then click on the map</li>
+            <li>Click "Add End Point" then click on the map</li>
+            <li>Click "Calculate Route" to find the shortest path</li>
           </ol>
-          <p style={{ fontSize: '12px', color: '#666', marginTop: '10px' }}>
-            ℹ️ Uses OSRM API (Dijkstra's algorithm under the hood for routing)
+          <p style={styles.note}>
+            ℹ️ Uses OSRM routing service with Dijkstra's algorithm
           </p>
         </div>
       </div>
 
-      <div style={{ flex: 1, position: 'relative' }}>
+      {/* Map Container */}
+      <div style={styles.mapContainer}>
+        {!mapLoaded && (
+          <div style={styles.loadingOverlay}>
+            Loading map...
+          </div>
+        )}
         <div 
           ref={mapContainerRef} 
-          style={{ width: '100%', height: '100%' }}
+          style={styles.map}
         />
       </div>
     </div>
