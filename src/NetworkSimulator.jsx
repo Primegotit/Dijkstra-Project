@@ -106,8 +106,11 @@ const NetworkSimulator = () => {
 
   const handleCanvasClick = (e) => {
     const rect = canvasRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const scaleX = canvasRef.current.width / rect.width;
+    const scaleY = canvasRef.current.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+
     let clickedNode = null;
     nodes.forEach(n => { if(Math.hypot(n.x-x,n.y-y) <= 25) clickedNode = n; });
 
