@@ -94,6 +94,7 @@ let openSideNavbar = () => {
     <NetworkSimulator/>
 
 
+
     </>
   )
 }
