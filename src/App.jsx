@@ -88,9 +88,9 @@ let openSideNavbar = () => {
       </main>
     </div>
 
-    <Page2/>
+    {/* <Page2/>
     <Page3/>
-    <RouteplannerApp/>
+    <RouteplannerApp/> */}
     <NetworkSimulator/>
 
 
