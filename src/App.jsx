@@ -22,9 +22,9 @@ let more_btn = document.getElementById("more-button");
     let item3 = document.createElement("li");
     let item4 = document.createElement("li");
     item1.innerHTML = `<a href="#page1">Home</a>`;
-    item4.innerHTML = `<a href="#page4">About</a>`;
+    item4.innerHTML = `<a href="#page4">About us</a>`;
     item2.innerHTML = `<a href="#page2">Services</a>`;
-    item3.innerHTML = `<a href="#page4">Contact</a>`;
+    item3.innerHTML = `<a href="#page4">Contacts</a>`;
 
     item_list.appendChild(item1);
     item_list.appendChild(item2);
