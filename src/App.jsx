@@ -58,12 +58,12 @@ let openSideNavbar = () => {
     <div id='page1'>
 
       <nav>
-        <h3> <img src="/trackway2.png" id='name-img' alt="" />TrackWay</h3>
+        <h3> <img src="/trackway2.png" id='name-img' alt="" />PacketSim</h3>
         <ul>
-          <li><a href="#" className='hover-link'>Home</a></li>
-          <li><a href="#" className='hover-link'>Services</a></li>
-          <li><a href="#" className='hover-link'>About</a></li>
-          <li><a href="#" className='hover-link'>Contact us</a></li>
+          <li><a href="#" className='hover-link'></a></li>
+          <li><a href="#" className='hover-link'></a></li>
+          <li><a href="#" className='hover-link'></a></li>
+          <li><a href="#" className='hover-link'></a></li>
 
         </ul>
 
@@ -76,9 +76,9 @@ let openSideNavbar = () => {
           <div id='image-container'>
             <img src="/trackway.png" alt="" />
           </div>
-          <h1 className="glide-text">Welcome to TrackWay</h1>
-          <h5>Where <span >algorithms</span> meet the road.</h5>
-          <p>Plan, optimize, and track your deliveries in seconds. With real-time maps and intelligent route calculation, TrackWay gets you from point A to point B the fastest way possible.</p>
+          <h1 className="glide-text">Welcome to PacketSim</h1>
+          <h5>Shortest-Path Routing Using Dijkstra’s Algorithm</h5>
+          <p>PacketSim is a lightweight network simulator that models packet routing using Dijkstra’s shortest-path algorithm, helping users easily understand network paths and routing behavior.</p>
           <button>Get Started</button>
 
           <div id='down-arrow'>
