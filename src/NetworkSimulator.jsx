@@ -1,4 +1,4 @@
-// File: InteractiveNetworkSimulator.jsx
+
 import React, { useState, useEffect, useRef } from 'react';
 import './NetworkSimulator.css';
 
@@ -53,6 +53,7 @@ const NetworkSimulator = () => {
       const rows = Object.keys(dist).filter(d => d !== n.name).map(dest => {
         let nextHop = dest;
         while(prev[nextHop] && prev[nextHop] !== n.name) nextHop = prev[nextHop];
+        nextHop = prev[nextHop] === n.name ? nextHop : prev[nextHop];
         return { destination: dest, nextHop: nextHop || '-', cost: dist[dest] };
       });
       return { router: n.name, rows };
@@ -156,7 +157,7 @@ const NetworkSimulator = () => {
       <div id='routingTables'>
         {routingTables.map(table => (
           <div key={table.router} className='routing-table'>
-            <h3>{`Routing Table for ${table.router}`}</h3>
+            <h3 id='routingh3'>{`Routing Table for ${table.router}`}</h3>
             <table>
               <thead><tr><th>Destination</th><th>Next Hop</th><th>Cost</th></tr></thead>
               <tbody>

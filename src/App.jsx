@@ -54,7 +54,7 @@ let openSideNavbar = () => {
 
   return (
     <>
-    
+ 
     <div id='page1'>
 
       <nav>
@@ -86,7 +86,7 @@ let openSideNavbar = () => {
           </div>
         </section>
       </main>
-    </div>
+    </div> 
 
     {/* <Page2/>
     <Page3/>
